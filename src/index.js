@@ -87,7 +87,7 @@ export default function install(Vue, setupOptions = {}) {
 
       options.debug && console.debug("[vue-tracker] Tracking " + urlTo);
 
-      window.track("setCurrentUrl", urlTo);
+      window.track("setCurrentUrl", urlFrom);
       window.track("trackUnLoadPageView");
 
       window.track("setCurrentUrl", urlFrom);
