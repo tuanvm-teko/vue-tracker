@@ -2,7 +2,11 @@ const defaultOptions = {
   debug: false,
   host: "https://dev-tracking.teko.vn",
   urlServeJsFile:
-    "https://dev-tracking.teko.vn/track/libs/tracker-v1.0.0.full.min.js"
+    "https://dev-tracking.teko.vn/track/libs/tracker-v1.0.0.full.min.js",
+  contentImpressionsWithInNode: {
+    enable: false,
+    options: { wrapper: "app" }
+  }
 };
 
 const init = function(f, b, e, v, i, r, t, s) {
@@ -62,6 +66,14 @@ export default function install(Vue, setupOptions = {}) {
   // Track page navigations if router is specified
   if (options.router) {
     options.router.afterEach((to, from) => {
+      // enable for content tracking in node
+      if (options.contentImpressionsWithInNode.enable) {
+        const content = document.getElementById(
+          options.contentImpressionsWithInNode.options.wrapper
+        );
+        window.track("enableTrackContentImpressionsWithInNode", content);
+      }
+
       // Unfortunately the window location is not yet updated here
       // We need to make our own url using the data provided by the router
       const loc = window.location;
