@@ -1,5 +1,4 @@
 const defaultOptions = {
-  trackInitialView: true,
   debug: false,
   host: "https://dev-tracking.teko.vn",
   urlServeJsFile:
@@ -58,11 +57,6 @@ export default function install(Vue, setupOptions = {}) {
 
   if (options.appId) {
     track("init", options.appId);
-  }
-
-  if (options.trackInitialView) {
-    // Register first page view
-    window.track("trackLoadPageView");
   }
 
   // Track page navigations if router is specified

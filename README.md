@@ -26,10 +26,6 @@ Vue.use(VueTrackerTeko, {
   // Enables automatically registering pageviews on the router
   router: router,
 
-  // Whether to track the initial page view
-  // Default: true
-  trackInitialView: true,
-
   // Whether or not to log debug information
   // Default: false
   debug: false
