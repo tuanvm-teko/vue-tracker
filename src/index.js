@@ -1,0 +1,106 @@
+const defaultOptions = {
+  init: true,
+  trackInitialView: true,
+  debug: false,
+  host: "https://dev-tracking.teko.vn",
+  urlServeJsFile:
+    "https://dev-tracking.teko.vn/track/libs/tracker-v1.0.0.full.min.js"
+};
+
+const init = function(f, b, e, v, i, r, t, s) {
+  // Stop if tracker already exists
+  if (f[i]) return;
+
+  // Initialise the 'GlobalTrackerNamespace' array
+  f["GlobalTrackerNamespace"] = f["GlobalTrackerNamespace"] || [];
+
+  // Add the new Tracker namespace to the global array so tracker.js can find it
+  f["GlobalTrackerNamespace"].push(i);
+
+  // Add endpoint
+  f["GlobalTrackerNamespace"].push(r);
+
+  // Create the Snowplow function
+  f[i] = function() {
+    (f[i].q = f[i].q || []).push(arguments);
+  };
+
+  // Initialise the asynchronous queue
+  f[i].q = f[i].q || [];
+
+  // Create a new script element
+  t = b.createElement(e);
+
+  // The new script should load asynchronously
+  t.async = !0;
+
+  // Load Tracker-js
+  t.src = v;
+
+  // Get the first script on the page
+  s = b.getElementsByTagName(e)[0];
+
+  // Insert the Snowplow script before every other script so it executes as soon as possible
+  s.parentNode.insertBefore(t, s);
+
+  // add listener error
+  window.onerror = function(msg, url, lineNo, columnNo, error) {
+    f[i]("error", { msg: msg, error: error });
+    return false;
+  };
+};
+
+export default function install(Vue, setupOptions = {}) {
+  const options = Object.assign({}, defaultOptions, setupOptions);
+
+  const { host, urlServeJsFile } = options;
+
+  if (options.init) {
+    init(window, document, "script", urlServeJsFile, "track", host);
+  }
+
+  if (options.appId) {
+    track("init", options.appId);
+  }
+
+  if (options.trackInitialView) {
+    // Register first page view
+    window.track("trackLoadPageView");
+  }
+
+  // Track page navigations if router is specified
+  if (options.router) {
+    options.router.afterEach((to, from) => {
+      // Unfortunately the window location is not yet updated here
+      // We need to make our own url using the data provided by the router
+      const loc = window.location;
+
+      // Protocol may or may not contain a colon
+      let protocol = loc.protocol;
+      if (protocol.slice(-1) !== ":") {
+        protocol += ":";
+      }
+
+      const getPath = source => {
+        return protocol + "//" + loc.host + maybeHash + source.path;
+      };
+
+      const maybeHash = options.router.mode === "hash" ? "/#" : "";
+      const urlTo = getPath(to);
+      const urlFrom = getPath(from);
+
+      if (to.meta.analyticsIgnore) {
+        options.debug && console.debug("[vue-tracker] Ignoring " + urlTo);
+        return;
+      }
+
+      options.debug && console.debug("[vue-tracker] Tracking " + urlTo);
+
+      window.track("setCurrentUrl", urlTo);
+      window.track("trackUnLoadPageView");
+
+      window.track("setCurrentUrl", urlFrom);
+      window.track("trackLoadPageView");
+    });
+  }
+}
