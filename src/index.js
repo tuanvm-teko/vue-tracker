@@ -73,10 +73,10 @@ export default function install(Vue, setupOptions = {}) {
       }
 
       const getPath = source => {
+        const maybeHash = options.router.mode === "hash" ? "/#" : "";
         return protocol + "//" + loc.host + maybeHash + source.path;
       };
 
-      const maybeHash = options.router.mode === "hash" ? "/#" : "";
       const urlTo = getPath(to);
       const urlFrom = getPath(from);
 
@@ -90,7 +90,7 @@ export default function install(Vue, setupOptions = {}) {
       window.track("setCurrentUrl", urlFrom);
       window.track("trackUnLoadPageView");
 
-      window.track("setCurrentUrl", urlFrom);
+      window.track("setCurrentUrl", urlTo);
       window.track("trackLoadPageView");
     });
   }
