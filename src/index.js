@@ -90,6 +90,7 @@ export default function install(Vue, setupOptions = {}) {
       window.track("setCurrentUrl", urlFrom);
       window.track("trackUnLoadPageView");
 
+      window.track("setReferrerUrl", urlFrom);
       window.track("setCurrentUrl", urlTo);
       window.track("trackLoadPageView");
     });
