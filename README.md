@@ -15,9 +15,9 @@ npm install --save vue-tracker-teko
 
 ```js
 import Vue from "vue";
-import VueMatomo from "vue-tracker-teko";
+import VueTrackerTeko from "vue-tracker-teko";
 
-Vue.use(VueMatomo, {
+Vue.use(VueTrackerTeko, {
   // Configure your matomo server and site by providing
   host: "https://dev-tracking.teko.vn",
   urlServeJsFile: "https://dev-tracking.teko.vn/track/libs/tracker-v1.0.0.full.min.js",
