@@ -28,13 +28,7 @@ Vue.use(VueTrackerTeko, {
 
   // Whether or not to log debug information
   // Default: false
-  debug: false,
-
-  // ContentImpressionWithNode defined div wrapper app and status enable or not
-  contentImpressionsWithInNode: {
-    enable: true,
-    options: { wrapper: "app" }
-  }
+  debug: false
 });
 
 // or

@@ -67,12 +67,12 @@ export default function install(Vue, setupOptions = {}) {
   if (options.router) {
     options.router.afterEach((to, from) => {
       // enable for content tracking in node
-      if (options.contentImpressionsWithInNode.enable) {
-        const content = document.getElementById(
-          options.contentImpressionsWithInNode.options.wrapper
-        );
-        window.track("enableTrackContentImpressionsWithInNode", content);
-      }
+      // if (options.contentImpressionsWithInNode.enable) {
+      //   const content = document.getElementById(
+      //     options.contentImpressionsWithInNode.options.wrapper
+      //   );
+      //   window.track("enableTrackContentImpressionsWithInNode", content);
+      // }
 
       // Unfortunately the window location is not yet updated here
       // We need to make our own url using the data provided by the router
