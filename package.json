@@ -1,6 +1,12 @@
 {
-  "name": "vue-tracker",
+  "name": "vue-tracker-teko",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "main": "src/index.js",
+  "license": "MIT",
+  "author": "Tuan VM",
+  "description": "Plugin for matomo",
+  "keywords": [
+    "npm",
+    "tracker"
+  ]
 }

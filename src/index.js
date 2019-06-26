@@ -1,5 +1,4 @@
 const defaultOptions = {
-  init: true,
   trackInitialView: true,
   debug: false,
   host: "https://dev-tracking.teko.vn",
@@ -55,9 +54,7 @@ export default function install(Vue, setupOptions = {}) {
 
   const { host, urlServeJsFile } = options;
 
-  if (options.init) {
-    init(window, document, "script", urlServeJsFile, "track", host);
-  }
+  init(window, document, "script", urlServeJsFile, "track", host);
 
   if (options.appId) {
     track("init", options.appId);
