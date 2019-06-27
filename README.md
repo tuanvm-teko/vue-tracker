@@ -18,7 +18,7 @@ import Vue from "vue";
 import VueTrackerTeko from "vue-tracker-teko";
 
 Vue.use(VueTrackerTeko, {
-  // Configure your matomo server and site by providing
+  // Configure your tracker server and site by providing
   host: "https://dev-tracking.teko.vn",
   urlServeJsFile: "https://dev-tracking.teko.vn/track/libs/tracker-v1.0.0.full.min.js",
   appId: "chat-tool"
