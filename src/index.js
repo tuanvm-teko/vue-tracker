@@ -84,6 +84,8 @@ export default function install(Vue, setupOptions = {}) {
         protocol += ":";
       }
 
+      window.track("enablePageView");
+
       const getPath = source => {
         const maybeHash = options.router.mode === "hash" ? "/#" : "";
         return protocol + "//" + loc.host + maybeHash + source.path;
@@ -99,6 +101,7 @@ export default function install(Vue, setupOptions = {}) {
 
       options.debug && console.debug("[vue-tracker] Tracking " + urlTo);
 
+      if (urlFrom === urlTo) return;
       window.track("setCurrentUrl", urlFrom);
       window.track("trackUnLoadPageView");
 
