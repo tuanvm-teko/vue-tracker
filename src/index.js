@@ -53,15 +53,15 @@ const init = function(f, b, e, v, i, r, t, s) {
 };
 
 export default function install(Vue, setupOptions = {}) {
+  let isStart = false;
   const options = Object.assign({}, defaultOptions, setupOptions);
-
   const { host, urlServeJsFile } = options;
-
   init(window, document, "script", urlServeJsFile, "track", host);
-
   if (options.appId) {
     track("init", options.appId);
   }
+
+  window.track("enableUnloadPageView");
 
   // Track page navigations if router is specified
   if (options.router) {
@@ -84,8 +84,6 @@ export default function install(Vue, setupOptions = {}) {
         protocol += ":";
       }
 
-      window.track("enablePageView");
-
       const getPath = source => {
         const maybeHash = options.router.mode === "hash" ? "/#" : "";
         return protocol + "//" + loc.host + maybeHash + source.path;
@@ -98,16 +96,26 @@ export default function install(Vue, setupOptions = {}) {
         options.debug && console.debug("[vue-tracker] Ignoring " + urlTo);
         return;
       }
+      if (options.debug) {
+        console.debug("[vue-tracker] Tracking to " + urlTo);
+        console.debug("[vue-tracker] Tracking from " + urlFrom);
+      }
 
-      options.debug && console.debug("[vue-tracker] Tracking " + urlTo);
+      if (isStart && urlFrom === urlTo) {
+        window.track("setCurrentUrl", urlFrom);
+        window.track("trackUnLoadPageView");
+      }
 
-      if (urlFrom === urlTo) return;
-      window.track("setCurrentUrl", urlFrom);
-      window.track("trackUnLoadPageView");
+      if (isStart && urlFrom !== urlTo) {
+        window.track("setCurrentUrl", urlFrom);
+        window.track("trackUnLoadPageView");
+      }
 
       window.track("setReferrerUrl", urlFrom);
       window.track("setCurrentUrl", urlTo);
       window.track("trackLoadPageView");
+
+      isStart = true;
     });
   }
 }
