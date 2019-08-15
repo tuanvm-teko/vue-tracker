@@ -111,7 +111,16 @@ export default function install(Vue, setupOptions = {}) {
         window.track("trackUnLoadPageView");
       }
 
-      window.track("setReferrerUrl", urlFrom);
+      if (!isStart) {
+        if (document.referrer) {
+          window.track("setReferrerUrl", document.referrer);
+        } else {
+          window.track("setReferrerUrl", urlFrom);
+        }
+      } else {
+        window.track("setReferrerUrl", urlFrom);
+      }
+
       window.track("setCurrentUrl", urlTo);
       window.track("trackLoadPageView");
 
