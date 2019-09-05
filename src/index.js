@@ -91,7 +91,7 @@ export default function install(Vue, setupOptions = {}) {
 
       const getPathFull = source => {
         const maybeHash = options.router.mode === "hash" ? "/#" : "";
-        return protocol + "//" + loc.host + maybeHash + source.path;
+        return protocol + "//" + loc.host + maybeHash + source.pathFull;
       };
 
       const urlToFull = getPathFull(to);
