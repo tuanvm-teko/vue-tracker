@@ -89,6 +89,14 @@ export default function install(Vue, setupOptions = {}) {
         return protocol + "//" + loc.host + maybeHash + source.path;
       };
 
+      const getPathFull = source => {
+        const maybeHash = options.router.mode === "hash" ? "/#" : "";
+        return protocol + "//" + loc.host + maybeHash + source.path;
+      };
+
+      const urlToFull = getPathFull(to);
+      const urlFromFull = getPathFull(from);
+
       const urlTo = getPath(to);
       const urlFrom = getPath(from);
 
@@ -102,12 +110,12 @@ export default function install(Vue, setupOptions = {}) {
       }
 
       if (isStart && urlFrom === urlTo) {
-        window.track("setCurrentUrl", urlFrom);
+        window.track("setCurrentUrl", urlFromFull);
         window.track("trackUnLoadPageView");
       }
 
       if (isStart && urlFrom !== urlTo) {
-        window.track("setCurrentUrl", urlFrom);
+        window.track("setCurrentUrl", urlFromFull);
         window.track("trackUnLoadPageView");
       }
 
@@ -115,13 +123,13 @@ export default function install(Vue, setupOptions = {}) {
         if (document.referrer) {
           window.track("setReferrerUrl", document.referrer);
         } else {
-          window.track("setReferrerUrl", urlFrom);
+          window.track("setReferrerUrl", urlFromFull);
         }
       } else {
-        window.track("setReferrerUrl", urlFrom);
+        window.track("setReferrerUrl", urlFromFull);
       }
 
-      window.track("setCurrentUrl", urlTo);
+      window.track("setCurrentUrl", urlToFull);
       window.track("trackLoadPageView");
 
       isStart = true;
