@@ -44,7 +44,11 @@ window.track();
   name: 'Page2',
   component: Page2,
   meta: {
-    pageCode: 'detailPage'
+    pageCode: 'detailPage',
+    getSku: (route) => {
+      // do something to get sku
+      return sku
+    }
   }
 }
 ```
