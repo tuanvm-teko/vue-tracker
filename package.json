@@ -4,7 +4,7 @@
   "main": "build/index.js",
   "license": "MIT",
   "author": "Tuan VM",
-  "description": "Plugin for matomo",
+  "description": "Plugin for teko tracker",
   "keywords": [
     "npm",
     "tracker"
