@@ -1,3 +1,6 @@
+/* tslint:disable:no-unused-variable */
+import VueRouter, { Route } from "vue-router";
+
 const defaultOptions = {
   debug: false,
   host: "https://dev-tracking.teko.vn",
@@ -9,7 +12,16 @@ const defaultOptions = {
   }
 };
 
-const init = function(f, b, e, v, i, r, t, s) {
+const init = function(
+  f: any,
+  b: any,
+  e: any,
+  v: any,
+  i: any,
+  r: any,
+  t?: any,
+  s?: any
+) {
   // Stop if tracker already exists
   if (f[i]) return;
 
@@ -46,22 +58,40 @@ const init = function(f, b, e, v, i, r, t, s) {
   s.parentNode.insertBefore(t, s);
 
   // add listener error
-  window.onerror = function(msg, url, lineNo, columnNo, error) {
+  window.onerror = function(
+    msg,
+    _url: any,
+    _lineNo: any,
+    _columnNo: any,
+    error: any
+  ) {
     f[i]("error", { msg: msg, error: error });
     return false;
   };
 };
 
-export default function install(Vue, setupOptions = {}) {
+type Options = {
+  host: string;
+  urlServeJsFile: string;
+  appId: string;
+  router?: VueRouter;
+  debug?: boolean;
+};
+
+export default function install(_Vue: VueRouter, setupOptions = {}) {
   let isStart = false;
-  const options = Object.assign({}, defaultOptions, setupOptions);
+  const options: Options = Object.assign(
+    {},
+    defaultOptions,
+    setupOptions
+  ) as any;
   const { host, urlServeJsFile } = options;
   init(window, document, "script", urlServeJsFile, "track", host);
   if (options.appId) {
-    track("init", options.appId);
+    (window as any).track("init", options.appId);
   }
 
-  window.track("enableUnloadPageView");
+  (window as any).track("enableUnloadPageView");
 
   // Track page navigations if router is specified
   if (options.router) {
@@ -84,14 +114,21 @@ export default function install(Vue, setupOptions = {}) {
         protocol += ":";
       }
 
-      const getPath = source => {
-        const maybeHash = options.router.mode === "hash" ? "/#" : "";
+      const getPath = (source: Route) => {
+        const maybeHash = options.router!.mode === "hash" ? "/#" : "";
         return protocol + "//" + loc.host + maybeHash + source.path;
       };
 
-      const getPathFull = source => {
-        const maybeHash = options.router.mode === "hash" ? "/#" : "";
+      const getPathFull = (source: Route) => {
+        const maybeHash = options.router!.mode === "hash" ? "/#" : "";
         return protocol + "//" + loc.host + maybeHash + source.fullPath;
+      };
+
+      const getSkuFromRoute = (route: Route) => {
+        const { meta } = route;
+        return meta && meta.getSku && typeof meta.getSku == "function"
+          ? meta.getSku(route)
+          : undefined;
       };
 
       const urlToFull = getPathFull(to);
@@ -109,28 +146,36 @@ export default function install(Vue, setupOptions = {}) {
         console.debug("[vue-tracker] Tracking from " + urlFrom);
       }
 
-      if (isStart && urlFrom === urlTo) {
-        window.track("setCurrentUrl", urlFromFull);
-        window.track("trackUnLoadPageView");
-      }
+      const { meta: metaTo } = to;
+      const { meta: metaFrom } = from;
+      const skuTo = getSkuFromRoute(to);
+      const skuFrom = getSkuFromRoute(from);
 
-      if (isStart && urlFrom !== urlTo) {
-        window.track("setCurrentUrl", urlFromFull);
-        window.track("trackUnLoadPageView");
+      if (isStart) {
+        (window as any).track("setCurrentUrl", urlFromFull);
+        (window as any).track("trackUnLoadPageView", {
+          ...(metaFrom && metaFrom.pageCode
+            ? { pageCode: metaFrom.pageCode }
+            : {}),
+          ...(skuFrom ? { sku: skuFrom } : {})
+        });
       }
 
       if (!isStart) {
         if (document.referrer) {
-          window.track("setReferrerUrl", document.referrer);
+          (window as any).track("setReferrerUrl", document.referrer);
         } else {
-          window.track("setReferrerUrl", urlFromFull);
+          (window as any).track("setReferrerUrl", urlFromFull);
         }
       } else {
-        window.track("setReferrerUrl", urlFromFull);
+        (window as any).track("setReferrerUrl", urlFromFull);
       }
 
-      window.track("setCurrentUrl", urlToFull);
-      window.track("trackLoadPageView");
+      (window as any).track("setCurrentUrl", urlToFull);
+      (window as any).track("trackLoadPageView", {
+        ...(metaTo && metaTo.pageCode ? { pageCode: metaTo.pageCode } : {}),
+        ...(skuTo ? { sku: skuTo } : {})
+      });
 
       isStart = true;
     });

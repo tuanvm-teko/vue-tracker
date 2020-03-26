@@ -36,6 +36,19 @@ window.track();
 
 ```
 
+### Add more meta data for site
+
+```js
+{
+  path: '/page-2',
+  name: 'Page2',
+  component: Page2,
+  meta: {
+    pageCode: 'detailPage'
+  }
+}
+```
+
 ### Ignoring routes
 
 It is possible to ignore routes using the route meta:
@@ -46,7 +59,7 @@ It is possible to ignore routes using the route meta:
   name: 'Page2',
   component: Page2,
   meta: {
-  analyticsIgnore: true
+    analyticsIgnore: true
   }
 }
 ```
